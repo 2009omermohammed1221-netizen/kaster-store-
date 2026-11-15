@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import { I18nManager, Text, View } from 'react-native';
 import * as Notifications from 'expo-notifications';
@@ -80,12 +81,23 @@ function Boot() {
     // الضغط على الإشعار يفتح التطبيق مباشرة على الشاشة المناسبة (حتى لو كان التطبيق مغلقاً تماماً)
     const open = (res, tries = 0) => {
       const d = res?.notification?.request?.content?.data || {};
+      // نتجاهل أي استجابة بلا نوع (kind) كي لا يفتح التطبيق على شاشة الإشعارات من تلقاء نفسه
+      if (!d.kind) return;
       if (!navRef.isReady()) { if (tries < 40) setTimeout(() => open(res, tries + 1), 250); return; }
       if (d.kind === 'new_order' || d.kind === 'order_status') navRef.navigate('Tabs', { screen: 'Orders' });
       else if (d.kind === 'new_message') navRef.navigate('Tabs', { screen: 'Support' });
       else navRef.navigate('Notifications');
     };
-    Notifications.getLastNotificationResponseAsync().then((r) => { if (r) open(r); }).catch(() => {});
+    // عند فتح التطبيق من الصفر: نعالج آخر ضغطة على إشعار مرة واحدة فقط (حتى لا تتكرر في كل تشغيل)
+    Notifications.getLastNotificationResponseAsync().then(async (r) => {
+      if (!r) return;
+      const id = r.notification?.request?.identifier + ':' + r.actionIdentifier;
+      try {
+        if ((await AsyncStorage.getItem('last_notif_handled')) === id) return;
+        await AsyncStorage.setItem('last_notif_handled', id);
+      } catch (e) {}
+      open(r);
+    }).catch(() => {});
     const sub = Notifications.addNotificationResponseReceivedListener((r) => open(r));
     return () => sub.remove();
   }, []);

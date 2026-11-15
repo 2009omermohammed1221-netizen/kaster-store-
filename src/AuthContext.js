@@ -23,6 +23,7 @@ const toEmail = (id) => {
 
 function arabicError(e) {
   const m = String(e?.message || e || '');
+  if (!configured()) return 'التطبيق غير مربوط بالخادم بعد. ضع رابط Supabase والمفتاح في src/config.js ثم أعد البناء.';
   if (/Invalid login credentials/i.test(m)) return 'بيانات الدخول غير صحيحة.';
   if (/already registered|already been registered/i.test(m)) return 'هذا الحساب موجود مسبقاً، سجّل الدخول.';
   if (/Password should be/i.test(m)) return 'كلمة المرور ضعيفة (6 أحرف على الأقل).';
