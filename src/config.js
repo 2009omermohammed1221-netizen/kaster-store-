@@ -5,8 +5,8 @@ export { COLORS };
 
 // ===== إعداد Supabase: ضع بيانات مشروعك هنا (Project Settings → API) =====
 export const SUPABASE = {
-  url: 'https://YOUR-PROJECT.supabase.co',
-  anonKey: 'YOUR-ANON-KEY',
+  url: 'https://pljnswmxlcijbiecyczh.supabase.co',
+  anonKey: 'sb_publishable_KfBDsEHpL29Qzn1xezZtgQ_cXosYbUt',
 };
 export const configured = () => !SUPABASE.url.includes('YOUR-PROJECT');
 
