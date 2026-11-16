@@ -42,8 +42,10 @@ create trigger on_auth_user_created after insert on auth.users
   for each row execute function public.handle_new_user();
 
 alter table public.profiles enable row level security;
+drop policy if exists "profiles read own or owner" on public.profiles;
 create policy "profiles read own or owner" on public.profiles for select
   using (id = auth.uid() or public.is_owner());
+drop policy if exists "profiles update own" on public.profiles;
 create policy "profiles update own" on public.profiles for update
   using (id = auth.uid())
   with check (id = auth.uid() and role = public.my_role());
@@ -63,9 +65,13 @@ create table if not exists public.products (
   created_at timestamptz not null default now()
 );
 alter table public.products enable row level security;
+drop policy if exists "products read" on public.products;
 create policy "products read" on public.products for select using (active or public.is_owner());
+drop policy if exists "products owner insert" on public.products;
 create policy "products owner insert" on public.products for insert with check (public.is_owner());
+drop policy if exists "products owner update" on public.products;
 create policy "products owner update" on public.products for update using (public.is_owner());
+drop policy if exists "products owner delete" on public.products;
 create policy "products owner delete" on public.products for delete using (public.is_owner());
 
 -- ============ الطلبات ============
@@ -90,10 +96,13 @@ create table if not exists public.orders (
   updated_at timestamptz not null default now()
 );
 alter table public.orders enable row level security;
+drop policy if exists "orders read own or owner" on public.orders;
 create policy "orders read own or owner" on public.orders for select
   using (user_id = auth.uid() or public.is_owner());
+drop policy if exists "orders insert own" on public.orders;
 create policy "orders insert own" on public.orders for insert
   with check (user_id = auth.uid() and status = 'pending');
+drop policy if exists "orders owner update" on public.orders;
 create policy "orders owner update" on public.orders for update using (public.is_owner());
 
 -- ============ الدعم (محادثة سرية بين كل مستخدم والمالك) ============
@@ -110,12 +119,15 @@ create table if not exists public.messages (
 );
 create index if not exists messages_customer_idx on public.messages (customer_id, created_at);
 alter table public.messages enable row level security;
+drop policy if exists "messages read own or owner" on public.messages;
 create policy "messages read own or owner" on public.messages for select
   using (customer_id = auth.uid() or public.is_owner());
+drop policy if exists "messages insert" on public.messages;
 create policy "messages insert" on public.messages for insert with check (
   (customer_id = auth.uid() and sender_id = auth.uid() and sender_role = 'customer')
   or (public.is_owner() and sender_id = auth.uid() and sender_role = 'owner')
 );
+drop policy if exists "messages mark read" on public.messages;
 create policy "messages mark read" on public.messages for update
   using (customer_id = auth.uid() or public.is_owner());
 
@@ -132,6 +144,7 @@ create table if not exists public.notifications (
 );
 alter table public.notifications add column if not exists sound text;
 alter table public.notifications enable row level security;
+drop policy if exists "notifications read" on public.notifications;
 create policy "notifications read" on public.notifications for select
   using (user_id is null or user_id = auth.uid());
 
@@ -146,7 +159,9 @@ create table if not exists public.app_settings (
 );
 insert into public.app_settings (id) values (1) on conflict do nothing;
 alter table public.app_settings enable row level security;
+drop policy if exists "settings owner read" on public.app_settings;
 create policy "settings owner read" on public.app_settings for select using (public.is_owner());
+drop policy if exists "settings owner update" on public.app_settings;
 create policy "settings owner update" on public.app_settings for update using (public.is_owner());
 
 -- ============ رموز الإشعارات للأجهزة ============
@@ -191,20 +206,34 @@ insert into storage.buckets (id, name, public) values
   ('chat-media', 'chat-media', false)
 on conflict (id) do nothing;
 
+drop policy if exists "product media public read" on storage.objects;
 create policy "product media public read" on storage.objects for select
   using (bucket_id = 'product-media');
+drop policy if exists "product media owner insert" on storage.objects;
 create policy "product media owner insert" on storage.objects for insert to authenticated
   with check (bucket_id = 'product-media' and public.is_owner());
+drop policy if exists "product media owner delete" on storage.objects;
 create policy "product media owner delete" on storage.objects for delete to authenticated
   using (bucket_id = 'product-media' and public.is_owner());
 
+drop policy if exists "chat media read" on storage.objects;
 create policy "chat media read" on storage.objects for select to authenticated
   using (bucket_id = 'chat-media' and ((storage.foldername(name))[1] = auth.uid()::text or public.is_owner()));
+drop policy if exists "chat media insert" on storage.objects;
 create policy "chat media insert" on storage.objects for insert to authenticated
   with check (bucket_id = 'chat-media' and ((storage.foldername(name))[1] = auth.uid()::text or public.is_owner()));
 
 -- ============ التحديث الفوري ============
-alter publication supabase_realtime add table public.messages, public.orders, public.notifications, public.products;
+do $$
+declare t text;
+begin
+  foreach t in array array['messages','orders','notifications','products'] loop
+    begin
+      execute format('alter publication supabase_realtime add table public.%I', t);
+    exception when duplicate_object then null;
+    end;
+  end loop;
+end $$;
 
 -- ============ إدارة الإشعارات المنشورة (تعديل/حذف) ============
 drop policy if exists "notifications owner update" on public.notifications;
@@ -222,10 +251,15 @@ create table if not exists public.custom_sounds (
   created_at timestamptz not null default now()
 );
 alter table public.custom_sounds enable row level security;
+drop policy if exists "custom sounds read" on public.custom_sounds;
 create policy "custom sounds read" on public.custom_sounds for select using (true);
+drop policy if exists "custom sounds owner write" on public.custom_sounds;
 create policy "custom sounds owner write" on public.custom_sounds for all using (public.is_owner()) with check (public.is_owner());
 insert into storage.buckets (id, name, public) values ('sounds', 'sounds', true) on conflict (id) do nothing;
+drop policy if exists "sounds public read" on storage.objects;
 create policy "sounds public read" on storage.objects for select using (bucket_id = 'sounds');
+drop policy if exists "sounds owner insert" on storage.objects;
 create policy "sounds owner insert" on storage.objects for insert to authenticated with check (bucket_id = 'sounds' and public.is_owner());
+drop policy if exists "sounds owner delete" on storage.objects;
 create policy "sounds owner delete" on storage.objects for delete to authenticated using (bucket_id = 'sounds' and public.is_owner());
 
