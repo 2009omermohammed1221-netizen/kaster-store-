@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "96611198906",
+    "project_id": "kaster-store-f1668",
+    "storage_bucket": "kaster-store-f1668.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:96611198906:android:a157dac8a7b0b699811f83",
+        "android_client_info": {
+          "package_name": "com.casterstore.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARR5YeKPoL-PfwmnuDZ0ZkwXnvHL9bJcA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
