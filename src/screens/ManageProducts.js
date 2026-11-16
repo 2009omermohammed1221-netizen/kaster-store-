@@ -9,7 +9,7 @@ import { Btn, Empty } from '../ui';
 
 export default function ManageProducts({ navigation }) {
   useTheme();
-  const { all, reload } = useProducts();
+  const { all, reload, removeLocal } = useProducts();
   const [busy, setBusy] = useState(null);
 
   const toggle = async (p, active) => {
@@ -21,7 +21,17 @@ export default function ManageProducts({ navigation }) {
   const remove = (p) =>
     Alert.alert('حذف المنتج', `حذف «${p.name}» نهائياً؟`, [
       { text: 'إلغاء', style: 'cancel' },
-      { text: 'حذف', style: 'destructive', onPress: async () => { await supabase.from('products').delete().eq('id', p.id); reload(); } },
+      { text: 'حذف', style: 'destructive', onPress: async () => {
+        setBusy(p.id);
+        const { data, error } = await supabase.from('products').delete().eq('id', p.id).select('id');
+        setBusy(null);
+        if (error || !data || data.length === 0) {
+          Alert.alert('تعذّر الحذف', error ? error.message : 'لا تملك صلاحية الحذف. شغّل ملف الإعداد في Supabase ثم أعد المحاولة.');
+          return;
+        }
+        removeLocal(p.id);
+        reload();
+      } },
     ]);
 
   return (

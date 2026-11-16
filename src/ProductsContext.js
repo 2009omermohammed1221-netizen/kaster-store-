@@ -2,7 +2,6 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
 import { supabase } from './supabase';
 import { configured } from './config';
 import { PRODUCTS as SAMPLE } from './data';
-import { useAuth } from './AuthContext';
 
 const Ctx = createContext(null);
 const DAY = 86400000;
@@ -27,7 +26,6 @@ const fromSample = (p) => ({
 });
 
 export function ProductsProvider({ children }) {
-  const { isOwner } = useAuth();
   const [all, setAll] = useState(configured() ? [] : SAMPLE.map(fromSample));
   const [loading, setLoading] = useState(configured());
 
@@ -47,7 +45,7 @@ export function ProductsProvider({ children }) {
     return () => { supabase.removeChannel(ch); };
   }, [load]);
 
-  const products = useMemo(() => (isOwner ? all : all.filter((p) => p.active)), [all, isOwner]);
+  const products = useMemo(() => all.filter((p) => p.active), [all]);
 
   const productsOf = useCallback(
     (catId) =>
@@ -61,7 +59,9 @@ export function ProductsProvider({ children }) {
     [products]
   );
 
-  return <Ctx.Provider value={{ products, all, loading, reload: load, productsOf }}>{children}</Ctx.Provider>;
+  const removeLocal = useCallback((id) => setAll((a) => a.filter((p) => p.id !== id)), []);
+
+  return <Ctx.Provider value={{ products, all, loading, reload: load, productsOf, removeLocal }}>{children}</Ctx.Provider>;
 }
 
 export const useProducts = () => useContext(Ctx);

@@ -4,6 +4,8 @@ import { themed } from './theme';
 import { COLORS, fmt } from './config';
 import { emojiOf } from './data';
 
+export const pad2 = (list) => (list.length % 2 ? [...list, { id: '__pad', pad: true }] : list);
+
 export function ProductCard({ product, onPress, onAdd }) {
   const img = (product.media || []).find((m) => m.type === 'image');
   const hasVideo = (product.media || []).some((m) => m.type === 'video');

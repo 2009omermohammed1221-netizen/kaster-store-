@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { themed, useTheme } from '../theme';
 import { COLORS } from '../config';
-import { ProductCard } from '../ProductCard';
+import { ProductCard, pad2 } from '../ProductCard';
 import { useCart } from '../CartContext';
 import { useProducts } from '../ProductsContext';
 
@@ -14,12 +14,12 @@ export default function Category({ route, navigation }) {
   return (
     <View style={s.root}>
       <FlatList
-        data={list}
+        data={pad2(list)}
         numColumns={2}
         keyExtractor={(p) => p.id}
         contentContainerStyle={{ padding: 8 }}
         ListEmptyComponent={<Text style={s.empty}>لا توجد منتجات في هذا القسم بعد</Text>}
-        renderItem={({ item }) => (
+        renderItem={({ item }) => item.pad ? <View style={{ flex: 1, margin: 6 }} /> : (
           <ProductCard product={item} onPress={() => navigation.navigate('Product', { id: item.id })} onAdd={() => add(item)} />
         )}
       />

@@ -4,7 +4,7 @@ import { themed, useTheme } from '../theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS, STORE } from '../config';
 import { CATEGORIES } from '../data';
-import { ProductCard } from '../ProductCard';
+import { ProductCard, pad2 } from '../ProductCard';
 import { useCart } from '../CartContext';
 import { useProducts } from '../ProductsContext';
 import { useNotifs } from '../NotifContext';
@@ -35,7 +35,7 @@ export default function Home({ navigation }) {
       <TextInput style={s.search} placeholder="ابحث عن منتج..." placeholderTextColor={COLORS.muted} value={q} onChangeText={setQ} textAlign="right" />
 
       <FlatList
-        data={list}
+        data={pad2(list)}
         numColumns={2}
         keyExtractor={(p) => p.id}
         contentContainerStyle={{ paddingHorizontal: 8, paddingBottom: 30 }}
@@ -64,7 +64,7 @@ export default function Home({ navigation }) {
           )
         }
         ListEmptyComponent={loading ? <ActivityIndicator style={{ marginTop: 40 }} color={COLORS.primary} /> : <Text style={s.empty}>لا توجد منتجات بعد</Text>}
-        renderItem={({ item }) => (
+        renderItem={({ item }) => item.pad ? <View style={{ flex: 1, margin: 6 }} /> : (
           <ProductCard product={item} onPress={() => navigation.navigate('Product', { id: item.id })} onAdd={() => add(item)} />
         )}
       />
