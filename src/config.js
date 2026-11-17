@@ -15,7 +15,7 @@ export const STORE = {
   currency: 'د.ع',
   deliveryFee: 0, // التوصيل مجاني. ضع رقماً أكبر من صفر لتفعيل رسوم التوصيل
   // رابط تحميل التطبيق الذي يُرسَل عند المشاركة (ضع رابط Google Drive أو Play Store بعد النشر)
-  shareUrl: '',
+  shareUrl: 'https://2009omermohammed1221-netizen.github.io/kaster-store-/',
   facebook: 'https://www.facebook.com/profile.php?id=61590033001219',
   version: Constants.expoConfig?.version ?? '1.0.0',
 };
