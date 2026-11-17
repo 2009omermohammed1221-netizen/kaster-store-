@@ -3,6 +3,8 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
+permissions:
+  contents: write
 jobs:
   apk:
     runs-on: ubuntu-latest
@@ -19,3 +21,10 @@ jobs:
         with:
           name: caster-store-apk
           path: android/app/build/outputs/apk/release/*.apk
+      - name: Publish download link (GitHub Release)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp android/app/build/outputs/apk/release/*.apk caster-store.apk
+          gh release view latest >/dev/null 2>&1 || gh release create latest --title "Caster Store" --notes "Latest Android build" --latest
+          gh release upload latest caster-store.apk --clobber
