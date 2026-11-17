@@ -131,12 +131,28 @@ Deno.serve(async (req) => {
         ),
       });
       const out = await res.json().catch(() => ({}));
-      const tickets: Array<{ status: string; details?: { error?: string } }> = out.data ?? [];
+      const tickets: Array<{ status: string; id?: string; message?: string; details?: { error?: string } }> = out.data ?? [];
       const dead: string[] = [];
       tickets.forEach((t, idx) => {
         if (t.status === 'ok') sent++;
-        else if (t.details?.error === 'DeviceNotRegistered') dead.push(chunk[idx]);
+        else {
+          console.log('push ticket error', JSON.stringify(t));
+          if (t.details?.error === 'DeviceNotRegistered') dead.push(chunk[idx]);
+        }
       });
+      // فحص الإيصالات لمعرفة أسباب فشل التسليم (مثل بيانات FCM)
+      const ids = tickets.map((t) => t.id).filter(Boolean) as string[];
+      if (ids.length) {
+        await new Promise((r) => setTimeout(r, 4000));
+        const rr = await fetch('https://exp.host/--/api/v2/push/getReceipts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ ids }),
+        }).then((x) => x.json()).catch(() => ({}));
+        for (const [id, rc] of Object.entries(rr.data ?? {}) as Array<[string, any]>) {
+          if (rc.status !== 'ok') console.log('push receipt error', id, JSON.stringify(rc));
+        }
+      }
       if (dead.length) await admin.from('push_tokens').delete().in('token', dead);
     }
 
