@@ -55,10 +55,12 @@ export function NotifProvider({ children }) {
     try { await AsyncStorage.setItem(KEY, now); } catch (e) {}
   };
 
-  const unread = seenAt ? items.filter((i) => i.created_at > seenAt).length : 0;
+  // الصندوق: إشعارات المالك للجميع + حالة طلباتي فقط (تنبيهات الطلبات الجديدة والرسائل تصل كإشعار فقط)
+  const inbox = items.filter((i) => i.kind === 'broadcast' || i.kind === 'order_status');
+  const unread = seenAt ? inbox.filter((i) => i.created_at > seenAt).length : 0;
   const ICON = { new_order: '🧾', new_message: '💬', order_status: '📦', broadcast: '📣' };
   return (
-    <Ctx.Provider value={{ items, unread, markSeen, reload: load }}>
+    <Ctx.Provider value={{ items: inbox, unread, markSeen, reload: load }}>
       {children}
       {banner ? (
         <Animated.View pointerEvents="box-none" style={[st.wrap, { transform: [{ translateY: slide }] }]}>
