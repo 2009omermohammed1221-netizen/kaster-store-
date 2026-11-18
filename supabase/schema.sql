@@ -104,6 +104,8 @@ create policy "orders insert own" on public.orders for insert
   with check (user_id = auth.uid() and status = 'pending');
 drop policy if exists "orders owner update" on public.orders;
 create policy "orders owner update" on public.orders for update using (public.is_owner());
+drop policy if exists "orders owner delete" on public.orders;
+create policy "orders owner delete" on public.orders for delete using (public.is_owner());
 
 -- ============ الدعم (محادثة سرية بين كل مستخدم والمالك) ============
 create table if not exists public.messages (

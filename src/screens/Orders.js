@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, FlatList, Modal, TextInput, TouchableOpacity, RefreshControl, StyleSheet } from 'react-native';
+import { View, Text, FlatList, Modal, TextInput, TouchableOpacity, RefreshControl, Alert, StyleSheet } from 'react-native';
 import { themed, useTheme } from '../theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
@@ -49,6 +49,31 @@ export default function Orders({ navigation }) {
     }
   };
 
+  const removeOrders = async (ids) => {
+    const { data, error } = await supabase.from('orders').delete().in('id', ids).select('id');
+    if (error || !data || data.length === 0) {
+      Alert.alert('تعذّر الحذف', error ? error.message : 'لا تملك صلاحية الحذف.');
+      return;
+    }
+    setOrders((cur) => cur.filter((o) => !ids.includes(o.id)));
+  };
+
+  const confirmDelete = (order) => {
+    Alert.alert('حذف الطلب', `هل تريد حذف الطلب #${short(order.id)} نهائياً؟ لا يمكن التراجع.`, [
+      { text: 'إلغاء', style: 'cancel' },
+      { text: 'حذف', style: 'destructive', onPress: () => removeOrders([order.id]) },
+    ]);
+  };
+
+  const confirmClearDone = () => {
+    const ids = orders.filter((o) => o.status === 'delivered' || o.status === 'rejected').map((o) => o.id);
+    if (!ids.length) { Alert.alert('لا توجد طلبات منتهية', 'لا يوجد طلبات «تم التوصيل» أو «تم الرفض» لحذفها.'); return; }
+    Alert.alert('حذف الطلبات المنتهية', `سيتم حذف ${ids.length} طلب (تم التوصيل / تم الرفض) نهائياً. هل أنت متأكد؟`, [
+      { text: 'إلغاء', style: 'cancel' },
+      { text: 'حذف', style: 'destructive', onPress: () => removeOrders(ids) },
+    ]);
+  };
+
   const choose = (order, status) => {
     if (order.status === status) return;
     if (status === 'rejected') { setReason(''); setRejecting(order); }
@@ -74,6 +99,11 @@ export default function Orders({ navigation }) {
           <Chip label="الكل" on={filter === 'all'} onPress={() => setFilter('all')} />
           {STATUS_KEYS.map((k) => <Chip key={k} label={STATUS[k].label} on={filter === k} onPress={() => setFilter(k)} color={STATUS[k].color} />)}
         </View>
+      ) : null}
+      {isOwner && orders.some((o) => o.status === 'delivered' || o.status === 'rejected') ? (
+        <TouchableOpacity style={s.clear} onPress={confirmClearDone}>
+          <Text style={s.delTxt}>🗑 حذف الطلبات المنتهية (تم التوصيل / تم الرفض)</Text>
+        </TouchableOpacity>
       ) : null}
 
       <FlatList
@@ -118,6 +148,12 @@ export default function Orders({ navigation }) {
                   ))}
                 </View>
               ) : null}
+
+              {isOwner ? (
+                <TouchableOpacity style={s.del} onPress={() => confirmDelete(o)}>
+                  <Text style={s.delTxt}>🗑 حذف هذا الطلب</Text>
+                </TouchableOpacity>
+              ) : null}
             </View>
           );
         }}
@@ -154,6 +190,9 @@ const s = themed(() => ({
   line: { textAlign: 'right', color: COLORS.dark },
   reject: { backgroundColor: COLORS.dangerBg, borderRadius: 10, padding: 10, marginTop: 10 },
   rejectTxt: { color: COLORS.dangerInk, textAlign: 'right', fontWeight: '600' },
+  del: { alignSelf: 'flex-end', marginTop: 12, paddingVertical: 6, paddingHorizontal: 12, borderRadius: 10, backgroundColor: COLORS.dangerBg },
+  delTxt: { color: COLORS.dangerInk, fontWeight: '700', fontSize: 13 },
+  clear: { alignSelf: 'flex-end', marginHorizontal: 12, marginBottom: 6, paddingVertical: 6, paddingHorizontal: 12, borderRadius: 10, backgroundColor: COLORS.dangerBg },
   statuses: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 12 },
   overlay: { flex: 1, backgroundColor: '#0008', justifyContent: 'center', padding: 24 },
   modal: { backgroundColor: COLORS.card, borderRadius: 16, padding: 16 },
