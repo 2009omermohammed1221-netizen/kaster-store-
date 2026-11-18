@@ -70,6 +70,7 @@ Deno.serve(async (req) => {
       } else {
         title = 'رد من كاستر ستور';
         sound = st?.sound_reply ?? 'ding';
+        if (!m.customer_id) return json({ ok: true, devices: 0, sent: 0, skipped: 'no recipient' });
         recipients = [m.customer_id];
         ref = m.customer_id;
       }
@@ -81,6 +82,7 @@ Deno.serve(async (req) => {
       title = `طلبك: ${STATUS[o.status] ?? o.status}`;
       body = o.status === 'rejected' && o.reject_reason ? `سبب الرفض: ${o.reject_reason}` : 'اضغط لمتابعة طلباتك';
       sound = st?.sound_status ?? 'bell';
+      if (!o.user_id) return json({ ok: true, devices: 0, sent: 0, skipped: 'no recipient' });
       recipients = [o.user_id];
     } else if (input.type === 'broadcast') {
       if (!isOwner) return json({ error: 'forbidden' }, 403);
@@ -150,7 +152,13 @@ Deno.serve(async (req) => {
           body: JSON.stringify({ ids }),
         }).then((x) => x.json()).catch(() => ({}));
         for (const [id, rc] of Object.entries(rr.data ?? {}) as Array<[string, any]>) {
-          if (rc.status !== 'ok') console.log('push receipt error', id, JSON.stringify(rc));
+          if (rc.status !== 'ok') {
+            console.log('push receipt error', id, JSON.stringify(rc));
+            if (rc.details?.error === 'DeviceNotRegistered') {
+              const k = tickets.findIndex((t) => t.id === id);
+              if (k >= 0) dead.push(chunk[k]);
+            }
+          }
         }
       }
       if (dead.length) await admin.from('push_tokens').delete().in('token', dead);

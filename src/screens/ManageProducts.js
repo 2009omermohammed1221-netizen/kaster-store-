@@ -19,9 +19,10 @@ export default function ManageProducts({ navigation }) {
     setBusy(null);
   };
   const remove = (p) =>
-    Alert.alert('حذف المنتج', `حذف «${p.name}» نهائياً؟`, [
+    Alert.alert('حذف المنتج', `ماذا تريد أن تفعل بـ «${p.name}»؟`, [
       { text: 'إلغاء', style: 'cancel' },
-      { text: 'حذف', style: 'destructive', onPress: async () => {
+      ...(p.active ? [{ text: 'إيقاف النشر فقط', onPress: () => toggle(p, false) }] : []),
+      { text: 'حذف نهائي', style: 'destructive', onPress: async () => {
         setBusy(p.id);
         const { data, error } = await supabase.from('products').delete().eq('id', p.id).select('id');
         setBusy(null);
@@ -51,10 +52,10 @@ export default function ManageProducts({ navigation }) {
                 <Text style={s.name} numberOfLines={1}>{p.name}</Text>
                 <Text style={s.sub}>{fmt(p.price)} • {p.media.length} وسائط</Text>
               </TouchableOpacity>
-              <View style={{ alignItems: 'center', gap: 6 }}>
+              <View style={{ alignItems: 'center' }}>
                 <Switch value={p.active} disabled={busy === p.id} onValueChange={(v) => toggle(p, v)} trackColor={{ true: COLORS.primary }} />
-                <TouchableOpacity onPress={() => remove(p)}><Text style={{ color: COLORS.danger, fontSize: 12 }}>حذف</Text></TouchableOpacity>
               </View>
+              <TouchableOpacity style={s.delBtn} onPress={() => remove(p)}><Text style={s.delTxt}>🗑 حذف</Text></TouchableOpacity>
             </View>
           );
         }}
@@ -68,5 +69,7 @@ const s = themed(() => ({
   thumb: { width: 56, height: 56, borderRadius: 10, backgroundColor: COLORS.tint, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   name: { textAlign: 'right', fontWeight: '700', color: COLORS.dark },
   sub: { textAlign: 'right', color: COLORS.muted, marginTop: 3, fontSize: 12.5 },
+  delBtn: { marginStart: 8, paddingVertical: 8, paddingHorizontal: 10, borderRadius: 10, borderWidth: 1, borderColor: COLORS.danger, backgroundColor: 'rgba(220,38,38,0.08)' },
+  delTxt: { color: COLORS.danger, fontWeight: '700', fontSize: 13 },
   bar: { padding: 12, backgroundColor: COLORS.card, borderBottomWidth: 1, borderBottomColor: COLORS.line },
 }));

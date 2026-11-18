@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { I18nManager, Text, View } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { StatusBar } from 'expo-status-bar';
+import * as SplashScreen from 'expo-splash-screen';
 import { NavigationContainer, createNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -38,6 +39,8 @@ import SoundSettings from './src/screens/SoundSettings';
 import Broadcast from './src/screens/Broadcast';
 import ManageProducts from './src/screens/ManageProducts';
 import ProductEditor from './src/screens/ProductEditor';
+
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 // واجهة عربية من اليمين لليسار
 I18nManager.allowRTL(true);

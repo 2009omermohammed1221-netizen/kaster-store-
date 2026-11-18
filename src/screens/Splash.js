@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, Image, Animated, Easing, StyleSheet } from 'react-native';
+import * as SplashScreen from 'expo-splash-screen';
 import { STORE } from '../config';
 
 // شاشة افتتاحية احترافية: شعار متحرك + اسم المتجر + شريط تحميل، ثم تتلاشى للتطبيق
 const BG = '#F5F1E5';
 
 export default function Splash({ onDone }) {
-  const logo = useRef(new Animated.Value(0)).current;
+  const logo = useRef(new Animated.Value(1)).current;
   const text = useRef(new Animated.Value(0)).current;
   const bar = useRef(new Animated.Value(0)).current;
   const out = useRef(new Animated.Value(1)).current;
@@ -17,23 +18,20 @@ export default function Splash({ onDone }) {
       Animated.timing(float, { toValue: 1, duration: 1100, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
       Animated.timing(float, { toValue: 0, duration: 1100, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
     ])).start();
-    Animated.sequence([
-      Animated.spring(logo, { toValue: 1, friction: 5, tension: 60, useNativeDriver: true }),
-      Animated.timing(text, { toValue: 1, duration: 450, useNativeDriver: true }),
-    ]).start();
-    Animated.timing(bar, { toValue: 1, duration: 2300, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start();
+    Animated.timing(text, { toValue: 1, duration: 300, useNativeDriver: true }).start();
+    Animated.timing(bar, { toValue: 1, duration: 900, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start();
     const t = setTimeout(() => {
-      Animated.timing(out, { toValue: 0, duration: 450, useNativeDriver: true }).start(() => onDone && onDone());
-    }, 2700);
+      Animated.timing(out, { toValue: 0, duration: 250, useNativeDriver: true }).start(() => onDone && onDone());
+    }, 1100);
     return () => clearTimeout(t);
   }, []);
 
-  const scale = logo.interpolate({ inputRange: [0, 1], outputRange: [0.3, 1] });
+  const scale = logo.interpolate({ inputRange: [0, 1], outputRange: [1, 1] });
   const dy = float.interpolate({ inputRange: [0, 1], outputRange: [0, -8] });
   const w = bar.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] });
 
   return (
-    <Animated.View style={[s.root, { opacity: out }]} pointerEvents="auto">
+    <Animated.View style={[s.root, { opacity: out }]} pointerEvents="auto" onLayout={() => SplashScreen.hideAsync().catch(() => {})}>
       <Animated.View style={{ opacity: logo, transform: [{ scale }, { translateY: dy }], alignItems: 'center' }}>
         <Image source={require('../../assets/logo.png')} style={s.img} resizeMode="contain" />
       </Animated.View>

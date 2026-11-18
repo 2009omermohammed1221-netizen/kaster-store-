@@ -32,7 +32,7 @@ export async function setupChannels() {
 
 export const pushEnabled = async () => (await AsyncStorage.getItem('push_enabled')) !== '0';
 
-export async function registerPush() {
+export async function registerPush(attempt = 0) {
   if (!configured()) return null;
   try {
     await setupChannels();
@@ -42,10 +42,13 @@ export async function registerPush() {
     if (status !== 'granted') return null;
     const projectId = Constants.expoConfig?.extra?.eas?.projectId ?? Constants.easConfig?.projectId;
     const { data: token } = await Notifications.getExpoPushTokenAsync(projectId ? { projectId } : undefined);
-    await supabase.rpc('register_push_token', { p_token: token, p_platform: Platform.OS });
+    const { error } = await supabase.rpc('register_push_token', { p_token: token, p_platform: Platform.OS });
+    if (error) throw error;
     await AsyncStorage.setItem('push_token', token);
     return token;
   } catch (e) {
+    // إعادة المحاولة (شبكة ضعيفة / جلسة لم تجهز بعد)
+    if (attempt < 4) setTimeout(() => registerPush(attempt + 1), 4000 * (attempt + 1));
     return null;
   }
 }

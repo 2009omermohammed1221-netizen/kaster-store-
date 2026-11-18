@@ -56,7 +56,7 @@ export function NotifProvider({ children }) {
   };
 
   // الصندوق: إشعارات المالك للجميع + حالة طلباتي فقط (تنبيهات الطلبات الجديدة والرسائل تصل كإشعار فقط)
-  const inbox = items.filter((i) => i.kind === 'broadcast' || i.kind === 'order_status');
+  const inbox = items.filter((i) => i.kind === 'broadcast' || (i.kind === 'order_status' && i.user_id && i.user_id === uid));
   const unread = seenAt ? inbox.filter((i) => i.created_at > seenAt).length : 0;
   const ICON = { new_order: '🧾', new_message: '💬', order_status: '📦', broadcast: '📣' };
   return (
