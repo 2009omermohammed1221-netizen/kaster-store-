@@ -8,6 +8,7 @@ import { ProductCard, pad2 } from '../ProductCard';
 import { useCart } from '../CartContext';
 import { useProducts } from '../ProductsContext';
 import { useNotifs } from '../NotifContext';
+import UpdateBanner from '../UpdateBanner';
 
 export default function Home({ navigation }) {
   useTheme();
@@ -34,6 +35,7 @@ export default function Home({ navigation }) {
 
       <TextInput style={s.search} placeholder="ابحث عن منتج..." placeholderTextColor={COLORS.muted} value={q} onChangeText={setQ} textAlign="right" />
 
+      <UpdateBanner />
       <FlatList
         data={pad2(list)}
         numColumns={2}
