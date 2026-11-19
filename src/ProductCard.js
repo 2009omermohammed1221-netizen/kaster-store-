@@ -31,13 +31,13 @@ export function ProductCard({ product, onPress, onAdd }) {
 }
 
 const s = themed(() => ({
-  card: { flex: 1, margin: 6, backgroundColor: COLORS.card, borderRadius: 14, padding: 10, borderWidth: 1, borderColor: COLORS.line },
-  img: { height: 110, borderRadius: 10, backgroundColor: COLORS.tint, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
-  badge: { position: 'absolute', top: 6, right: 6, backgroundColor: COLORS.danger, color: '#fff', fontSize: 11, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8, overflow: 'hidden' },
+  card: { flex: 1, margin: 6, backgroundColor: COLORS.card, borderRadius: 20, padding: 10, shadowColor: '#14213D', shadowOpacity: 0.08, shadowRadius: 12, shadowOffset: { width: 0, height: 4 }, elevation: 3 },
+  img: { height: 125, borderRadius: 16, backgroundColor: COLORS.tint, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  badge: { position: 'absolute', top: 6, right: 6, backgroundColor: COLORS.accent, color: '#fff', fontSize: 11, fontWeight: '800', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 10, overflow: 'hidden' },
   video: { position: 'absolute', bottom: 6, left: 6, backgroundColor: '#0008', color: '#fff', fontSize: 11, paddingHorizontal: 7, paddingVertical: 2, borderRadius: 8, overflow: 'hidden' },
   name: { marginTop: 8, fontSize: 14, fontWeight: '600', color: COLORS.dark, textAlign: 'right', minHeight: 36 },
-  price: { color: COLORS.primary, fontWeight: '800', textAlign: 'right', marginTop: 4 },
+  price: { color: COLORS.primary, fontWeight: '800', fontSize: 15, textAlign: 'right', marginTop: 4 },
   old: { color: COLORS.muted, textDecorationLine: 'line-through', fontSize: 12, textAlign: 'right' },
-  add: { marginTop: 8, backgroundColor: COLORS.primary, borderRadius: 10, paddingVertical: 8, alignItems: 'center' },
-  addTxt: { color: COLORS.onPrimary, fontWeight: '700', fontSize: 13 },
+  add: { marginTop: 8, backgroundColor: COLORS.accent, borderRadius: 14, paddingVertical: 10, alignItems: 'center' },
+  addTxt: { color: '#fff', fontWeight: '700', fontSize: 13 },
 }));

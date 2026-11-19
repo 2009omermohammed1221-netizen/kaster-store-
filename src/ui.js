@@ -62,7 +62,7 @@ export function Empty({ icon = '🛒', text, action, onAction }) {
 }
 
 export function Avatar({ name = '?', size = 46 }) {
-  const colors = ['#6C3FE0', '#1D6FB8', '#1E8E5A', '#C2410C', '#B7287A', '#0F766E'];
+  const colors = ['#1F3A6E', '#1D6FB8', '#1E8E5A', '#C2410C', '#B7287A', '#0F766E'];
   const c = colors[(name.charCodeAt(0) || 0) % colors.length];
   return (
     <View style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: c, alignItems: 'center', justifyContent: 'center' }}>
@@ -72,11 +72,11 @@ export function Avatar({ name = '?', size = 46 }) {
 }
 
 const s = themed(() => ({
-  btn: { backgroundColor: COLORS.primary, borderRadius: 12, paddingVertical: 14, alignItems: 'center', justifyContent: 'center' },
+  btn: { backgroundColor: COLORS.primary, borderRadius: 16, paddingVertical: 15, shadowColor: '#1F3A6E', shadowOpacity: 0.25, shadowRadius: 8, shadowOffset: { width: 0, height: 4 }, elevation: 3, alignItems: 'center', justifyContent: 'center' },
   btnTxt: { color: COLORS.onPrimary, fontWeight: '800', fontSize: 15 },
   label: { textAlign: 'right', color: COLORS.dark, fontWeight: '600', marginBottom: 6 },
-  input: { backgroundColor: COLORS.card, borderRadius: 12, borderWidth: 1, borderColor: COLORS.line, padding: 12, fontSize: 15, color: COLORS.dark },
-  chip: { backgroundColor: COLORS.card, borderRadius: 18, borderWidth: 1, borderColor: COLORS.line, paddingHorizontal: 13, paddingVertical: 7 },
+  input: { backgroundColor: COLORS.card, borderRadius: 16, borderWidth: 1, borderColor: COLORS.line, padding: 14, fontSize: 15, color: COLORS.dark },
+  chip: { backgroundColor: COLORS.card, borderRadius: 20, borderWidth: 1, borderColor: COLORS.line, paddingHorizontal: 15, paddingVertical: 8 },
   chipTxt: { color: COLORS.dark, fontSize: 13 },
   empty: { alignItems: 'center', justifyContent: 'center', padding: 40 },
   emptyTxt: { color: COLORS.muted, marginTop: 10, textAlign: 'center' },

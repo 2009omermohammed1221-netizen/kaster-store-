@@ -179,7 +179,7 @@ const s = themed(() => ({
   root: { flex: 1, backgroundColor: COLORS.bg },
   title: { fontSize: 22, fontWeight: '800', color: COLORS.dark, textAlign: 'right', paddingHorizontal: 16, paddingVertical: 12 },
   filters: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, paddingHorizontal: 12, paddingBottom: 4 },
-  card: { backgroundColor: COLORS.card, borderRadius: 16, borderWidth: 1, borderColor: COLORS.line, padding: 14, marginBottom: 12 },
+  card: { backgroundColor: COLORS.card, borderRadius: 20, shadowColor: '#14213D', shadowOpacity: 0.07, shadowRadius: 10, shadowOffset: { width: 0, height: 3 }, elevation: 2, padding: 14, marginBottom: 12 },
   head: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   num: { fontWeight: '800', fontSize: 15, color: COLORS.dark },
   pill: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: 12, overflow: 'hidden', fontWeight: '700', fontSize: 12.5 },

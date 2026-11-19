@@ -34,7 +34,7 @@ export default function Notifications() {
 }
 
 const s = themed(() => ({
-  card: { flexDirection: 'row', gap: 12, backgroundColor: COLORS.card, borderRadius: 14, borderWidth: 1, borderColor: COLORS.line, padding: 14, marginBottom: 10 },
+  card: { flexDirection: 'row', gap: 12, backgroundColor: COLORS.card, borderRadius: 20, shadowColor: '#14213D', shadowOpacity: 0.07, shadowRadius: 10, shadowOffset: { width: 0, height: 3 }, elevation: 2, padding: 14, marginBottom: 10 },
   icon: { fontSize: 26 },
   title: { fontWeight: '800', color: COLORS.dark, textAlign: 'right' },
   body: { color: COLORS.dark, textAlign: 'right', marginTop: 3, lineHeight: 21 },

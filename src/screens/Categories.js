@@ -32,7 +32,7 @@ export default function Categories({ navigation }) {
 const s = themed(() => ({
   root: { flex: 1, backgroundColor: COLORS.bg },
   title: { fontSize: 22, fontWeight: '800', color: COLORS.dark, textAlign: 'right', paddingHorizontal: 16, paddingVertical: 12 },
-  card: { flex: 1, margin: 6, backgroundColor: COLORS.card, borderRadius: 16, borderWidth: 1, borderColor: COLORS.line, padding: 14, alignItems: 'center', minHeight: 120, justifyContent: 'center' },
+  card: { flex: 1, margin: 6, backgroundColor: COLORS.card, borderRadius: 20, shadowColor: '#14213D', shadowOpacity: 0.07, shadowRadius: 10, shadowOffset: { width: 0, height: 3 }, elevation: 2, padding: 14, alignItems: 'center', minHeight: 120, justifyContent: 'center' },
   name: { marginTop: 8, fontWeight: '700', color: COLORS.dark, textAlign: 'center', fontSize: 13 },
   count: { color: COLORS.muted, fontSize: 12, marginTop: 2 },
 }));

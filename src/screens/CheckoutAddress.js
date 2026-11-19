@@ -106,7 +106,7 @@ const s = themed(() => ({
   h: { fontSize: 20, fontWeight: '800', textAlign: 'right', color: COLORS.dark, marginBottom: 14, marginTop: 2 },
   label: { textAlign: 'right', color: COLORS.dark, fontWeight: '600', marginBottom: 8, marginTop: 4 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginBottom: 14 },
-  sum: { backgroundColor: COLORS.card, borderRadius: 14, borderWidth: 1, borderColor: COLORS.line, padding: 14, marginTop: 6 },
+  sum: { backgroundColor: COLORS.card, borderRadius: 20, shadowColor: '#14213D', shadowOpacity: 0.07, shadowRadius: 10, shadowOffset: { width: 0, height: 3 }, elevation: 2, padding: 14, marginTop: 6 },
   sumTxt: { textAlign: 'right', color: COLORS.primary, fontWeight: '700' },
   sumTotal: { textAlign: 'right', fontWeight: '800', fontSize: 16, marginTop: 6, color: COLORS.dark },
   err: { color: COLORS.danger, textAlign: 'right', marginTop: 10 },

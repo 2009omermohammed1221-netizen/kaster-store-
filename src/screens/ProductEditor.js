@@ -142,6 +142,6 @@ const s = themed(() => ({
   addTxt: { color: COLORS.primary, fontSize: 12 },
   thumb: { width: 90, height: 90, borderRadius: 12, backgroundColor: COLORS.tint, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   x: { position: 'absolute', top: 4, right: 4, backgroundColor: '#000a', width: 22, height: 22, borderRadius: 11, alignItems: 'center', justifyContent: 'center' },
-  linkBox: { backgroundColor: COLORS.card, borderRadius: 12, borderWidth: 1, borderColor: COLORS.line, padding: 10, marginBottom: 10 },
+  linkBox: { backgroundColor: COLORS.card, borderRadius: 20, shadowColor: '#14213D', shadowOpacity: 0.07, shadowRadius: 10, shadowOffset: { width: 0, height: 3 }, elevation: 2, padding: 10, marginBottom: 10 },
   err: { color: COLORS.danger, textAlign: 'right', marginTop: 10 },
 }));

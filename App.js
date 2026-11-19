@@ -64,7 +64,7 @@ function Tabs() {
         tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: COLORS.muted,
         tabBarLabelStyle: { fontSize: 11, fontWeight: '700' },
-        tabBarStyle: { height: 62, paddingBottom: 6, paddingTop: 4, backgroundColor: COLORS.card, borderTopColor: COLORS.line },
+        tabBarStyle: { height: 66, paddingBottom: 8, paddingTop: 6, backgroundColor: COLORS.card, borderTopWidth: 0, elevation: 16, shadowColor: '#14213D', shadowOpacity: 0.12, shadowRadius: 16, shadowOffset: { width: 0, height: -4 }, borderTopLeftRadius: 24, borderTopRightRadius: 24 },
       }}
     >
       <Tab.Screen name="Home" component={Home} options={{ title: 'الرئيسية', tabBarIcon: icon('🏠') }} />

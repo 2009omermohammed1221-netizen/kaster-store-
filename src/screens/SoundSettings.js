@@ -130,7 +130,7 @@ export default function SoundSettings() {
 
 const s = themed(() => ({
   note: { color: COLORS.muted, textAlign: 'right', marginBottom: 12, lineHeight: 22 },
-  card: { backgroundColor: COLORS.card, borderRadius: 14, borderWidth: 1, borderColor: COLORS.line, padding: 12, marginBottom: 10 },
+  card: { backgroundColor: COLORS.card, borderRadius: 20, shadowColor: '#14213D', shadowOpacity: 0.07, shadowRadius: 10, shadowOffset: { width: 0, height: 3 }, elevation: 2, padding: 12, marginBottom: 10 },
   head: { gap: 4 },
   label: { fontWeight: '700', color: COLORS.dark, textAlign: 'right' },
   val: { color: COLORS.primary, textAlign: 'right', fontWeight: '600' },

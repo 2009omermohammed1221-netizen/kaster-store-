@@ -65,7 +65,7 @@ export default function Cart({ navigation }) {
 const s = themed(() => ({
   root: { flex: 1, backgroundColor: COLORS.bg },
   title: { fontSize: 22, fontWeight: '800', color: COLORS.dark, textAlign: 'right', paddingHorizontal: 16, paddingVertical: 12 },
-  row: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.card, borderRadius: 14, borderWidth: 1, borderColor: COLORS.line, padding: 10, marginBottom: 10 },
+  row: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.card, borderRadius: 20, shadowColor: '#14213D', shadowOpacity: 0.07, shadowRadius: 10, shadowOffset: { width: 0, height: 3 }, elevation: 2, padding: 10, marginBottom: 10 },
   thumb: { width: 54, height: 54, borderRadius: 10, backgroundColor: COLORS.tint, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   name: { textAlign: 'right', fontWeight: '600', color: COLORS.dark },
   price: { textAlign: 'right', color: COLORS.primary, fontWeight: '700', marginTop: 4 },
