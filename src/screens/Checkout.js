@@ -5,7 +5,7 @@ import { COLORS } from '../config';
 import { useAuth, validPhone } from '../AuthContext';
 import { Btn, Field } from '../ui';
 
-// الخطوة 1: الاسم الثلاثي ورقم الهاتف وملاحظات للمندوب
+// الخطوة 1: الاسم ورقم الهاتف وملاحظات للمندوب
 export default function Checkout({ navigation }) {
   useTheme();
   const { profile } = useAuth();
@@ -16,7 +16,7 @@ export default function Checkout({ navigation }) {
   const [err, setErr] = useState('');
 
   const next = () => {
-    if (name.trim().split(/\s+/).length < 3) return setErr('اكتب الاسم الثلاثي (ثلاثة أسماء على الأقل).');
+    if (!name.trim()) return setErr('اكتب اسمك.');
     if (!validPhone(phone)) return setErr('أدخل رقم هاتف صحيح.');
     if (phone2.trim() && !validPhone(phone2)) return setErr('رقم الهاتف الثاني غير صحيح (أو اتركه فارغاً).');
     setErr('');
@@ -28,7 +28,7 @@ export default function Checkout({ navigation }) {
       <ScrollView style={s.root} contentContainerStyle={{ padding: 16 }} keyboardShouldPersistTaps="handled">
         <Text style={s.step}>الخطوة 1 من 2</Text>
         <Text style={s.h}>بيانات المستلم</Text>
-        <Field label="الاسم الثلاثي *" value={name} onChangeText={setName} placeholder="مثال: محمد أحمد علي" />
+        <Field label="الاسم *" value={name} onChangeText={setName} placeholder="مثال: محمد أو محمد أحمد أو محمد أحمد علي" />
         <Field label="رقم الهاتف *" value={phone} onChangeText={setPhone} keyboardType="phone-pad" placeholder="07xxxxxxxxx" />
         <Field label="رقم هاتف آخر (اختياري)" value={phone2} onChangeText={setPhone2} keyboardType="phone-pad" placeholder="07xxxxxxxxx" />
         <Field label="ملاحظات للمندوب (اختياري)" value={notes} onChangeText={setNotes} multiline placeholder="مثال: الاتصال قبل الوصول" />
