@@ -18,7 +18,7 @@ export default function Home({ navigation }) {
   const { unread } = useNotifs();
 
   const featured = [...new Map([...productsOf('best'), ...productsOf('offers')].map((p) => [p.id, p])).values()];
-  const list = q.trim() ? products.filter((p) => p.name.includes(q.trim())) : (featured.length ? featured : products);
+  const list = q.trim() ? products.filter((p) => p.name.includes(q.trim())) : [...featured, ...products.filter((p) => !featured.some((f) => f.id === p.id))];
 
   return (
     <SafeAreaView style={s.root} edges={['top']}>
@@ -61,7 +61,7 @@ export default function Home({ navigation }) {
                   </TouchableOpacity>
                 ))}
               </ScrollView>
-              <Text style={s.section}>الأكثر مبيعاً وعروض خاصة</Text>
+              <Text style={s.section}>كل المنتجات</Text>
             </View>
           )
         }

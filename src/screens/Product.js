@@ -8,6 +8,7 @@ import { useCart } from '../CartContext';
 import { useProducts } from '../ProductsContext';
 import { useAuth } from '../AuthContext';
 import { Btn } from '../ui';
+import ImageViewer from '../ImageViewer';
 
 export default function Product({ route, navigation }) {
   useTheme();
@@ -16,25 +17,32 @@ export default function Product({ route, navigation }) {
   const { isOwner } = useAuth();
   const { width } = useWindowDimensions();
   const [page, setPage] = useState(0);
+  const [viewIdx, setViewIdx] = useState(null);
   const p = all.find((x) => x.id === route.params.id);
   if (!p) return null;
   const cat = CATEGORIES.find((c) => c.id === p.cat);
   const media = p.media || [];
+  const imgs = media.filter((m) => m.type === 'image').map((m) => m.url);
 
   return (
     <View style={s.root}>
       <ScrollView>
         {media.length ? (
           <View>
-            <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} onMomentumScrollEnd={(e) => setPage(Math.round(e.nativeEvent.contentOffset.x / width))}>
+            <ScrollView horizontal pagingEnabled style={{ direction: 'ltr' }} showsHorizontalScrollIndicator={false} onMomentumScrollEnd={(e) => setPage(Math.round(e.nativeEvent.contentOffset.x / width))}>
               {media.map((m, i) =>
                 m.type === 'video' ? (
                   <Video key={i} source={{ uri: m.url }} style={{ width, height: 300, backgroundColor: '#000' }} useNativeControls resizeMode={ResizeMode.CONTAIN} />
                 ) : (
-                  <Image key={i} source={{ uri: m.url }} style={{ width, height: 300, backgroundColor: COLORS.tint }} resizeMode="cover" />
+                  <TouchableOpacity key={i} activeOpacity={0.95} onPress={() => setViewIdx(Math.max(0, imgs.indexOf(m.url)))}>
+                    <Image source={{ uri: m.url }} style={{ width, height: 300, backgroundColor: COLORS.tint }} resizeMode="cover" />
+                  </TouchableOpacity>
                 )
               )}
             </ScrollView>
+            {imgs.length ? (
+              <TouchableOpacity style={s.zoomBtn} onPress={() => setViewIdx(0)}><Text style={s.zoomTxt}>🔍 عرض الصورة</Text></TouchableOpacity>
+            ) : null}
             {media.length > 1 && <Text style={s.pager}>{page + 1} / {media.length}</Text>}
           </View>
         ) : (
@@ -65,6 +73,7 @@ export default function Product({ route, navigation }) {
         </View>
       </ScrollView>
 
+      <ImageViewer images={imgs} index={viewIdx} onIndex={setViewIdx} onClose={() => setViewIdx(null)} />
       <View style={s.bar}>
         <Btn style={{ flex: 1 }} title="أضف للسلة واذهب للدفع" onPress={() => { add(p); navigation.navigate('Tabs', { screen: 'Cart' }); }} />
         <Btn kind="ghost" title="+ سلة" style={{ paddingHorizontal: 18 }} onPress={() => add(p)} />
@@ -87,6 +96,8 @@ const s = themed(() => ({
   link: { backgroundColor: COLORS.card, borderRadius: 10, borderWidth: 1, borderColor: COLORS.line, padding: 12, marginTop: 8 },
   linkTxt: { color: COLORS.primary, textAlign: 'right', fontWeight: '600' },
   cod: { marginTop: 18, color: COLORS.primary, textAlign: 'right', fontWeight: '600' },
+  zoomBtn: { position: 'absolute', bottom: 12, right: 12, backgroundColor: 'rgba(0,0,0,0.6)', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 18 },
+  zoomTxt: { color: '#fff', fontWeight: '700', fontSize: 13 },
   swap: { marginTop: 8, color: COLORS.muted, textAlign: 'right', lineHeight: 22 },
   bar: { flexDirection: 'row', padding: 12, backgroundColor: COLORS.card, gap: 10, borderTopWidth: 1, borderTopColor: COLORS.line },
 }));

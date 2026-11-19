@@ -10,10 +10,10 @@ export default function Splash({ onDone }) {
   const bar = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.timing(bar, { toValue: 1, duration: 600, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start();
+    Animated.timing(bar, { toValue: 1, duration: 450, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start();
     const t = setTimeout(() => {
-      Animated.timing(out, { toValue: 0, duration: 220, useNativeDriver: true }).start(() => onDone && onDone());
-    }, 650);
+      Animated.timing(out, { toValue: 0, duration: 180, useNativeDriver: true }).start(() => onDone && onDone());
+    }, 450);
     return () => clearTimeout(t);
   }, []);
 

@@ -129,11 +129,12 @@ export default function Orders({ navigation }) {
 
               {isOwner ? (
                 <View style={s.box}>
-                  <Text style={s.line}>👤 {o.full_name}</Text>
-                  <Text style={s.line}>📞 {o.phone}{o.phone2 ? `  /  ${o.phone2}` : ''}</Text>
-                  <Text style={s.line}>📍 {o.governorate} - {o.area}</Text>
-                  <Text style={s.line}>🧭 {o.landmark}</Text>
-                  {o.notes ? <Text style={s.line}>📝 {o.notes}</Text> : null}
+                  <Text style={s.line}>الاسم: {o.full_name}</Text>
+                  <Text style={s.line}>رقم الهاتف: {o.phone}{o.phone2 ? `  /  ${o.phone2}` : ''}</Text>
+                  <Text style={s.line}>المحافظة: {o.governorate}</Text>
+                  <Text style={s.line}>المنطقة أو الحي: {o.area}</Text>
+                  <Text style={s.line}>أقرب نقطة دالة: {o.landmark}</Text>
+                  {o.notes ? <Text style={s.line}>ملاحظات: {o.notes}</Text> : null}
                 </View>
               ) : null}
 

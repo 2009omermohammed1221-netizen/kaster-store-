@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, KeyboardAvoidingView, Platform, TouchableOpacity, StyleSheet } from 'react-native';
 import { themed, useTheme } from '../theme';
 import { COLORS, STORE, fmt } from '../config';
-import { AREAS, GOVERNORATES } from '../areas';
+import { AREAS, GOVERNORATES, searchAreas, norm } from '../areas';
 import { supabase } from '../supabase';
 import { useCart } from '../CartContext';
 import { useAuth } from '../AuthContext';
@@ -19,6 +19,8 @@ export default function CheckoutAddress({ route, navigation }) {
   const [area, setArea] = useState('');
   const [otherArea, setOtherArea] = useState('');
   const [landmark, setLandmark] = useState('');
+  const [q, setQ] = useState('');
+  const [aq, setAq] = useState('');
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
   const total = subtotal + STORE.deliveryFee;
@@ -68,6 +70,18 @@ export default function CheckoutAddress({ route, navigation }) {
         <Text style={s.step}>الخطوة 2 من 2</Text>
         <Text style={s.h}>عنوان التوصيل</Text>
 
+        <Field label="🔍 ابحث عن حي أو منطقة (في كل العراق)" value={q} onChangeText={setQ} placeholder="مثال: الكرادة، الزبير، الحي..." />
+        {q.trim() ? (
+          <View style={s.results}>
+            {searchAreas(q).length ? searchAreas(q).map((r) => (
+              <TouchableOpacity key={r.gov + r.area} style={s.res} onPress={() => { setGov(r.gov); setArea(r.area); setQ(''); setAq(''); }}>
+                <Text style={s.resTxt}>{r.area}</Text>
+                <Text style={s.resGov}>{r.gov}</Text>
+              </TouchableOpacity>
+            )) : <Text style={s.none}>ما لقيت نتيجة. اختر المحافظة ثم «أخرى» واكتب اسم منطقتك.</Text>}
+          </View>
+        ) : null}
+
         <Text style={s.label}>المحافظة *</Text>
         <View style={s.chips}>
           {GOVERNORATES.map((g) => (
@@ -77,9 +91,10 @@ export default function CheckoutAddress({ route, navigation }) {
 
         {gov ? (
           <>
-            <Text style={s.label}>المنطقة *</Text>
+            <Text style={s.label}>المنطقة أو الحي *</Text>
+            <Field value={aq} onChangeText={setAq} placeholder={`ابحث داخل ${gov}...`} />
             <View style={s.chips}>
-              {[...AREAS[gov], 'أخرى'].map((a) => (
+              {[...AREAS[gov].filter((a) => !aq.trim() || norm(a).includes(norm(aq))), 'أخرى'].map((a) => (
                 <Chip key={a} label={a} on={area === a} onPress={() => setArea(a)} />
               ))}
             </View>
@@ -109,5 +124,10 @@ const s = themed(() => ({
   sum: { backgroundColor: COLORS.card, borderRadius: 20, shadowColor: '#14213D', shadowOpacity: 0.07, shadowRadius: 10, shadowOffset: { width: 0, height: 3 }, elevation: 2, padding: 14, marginTop: 6 },
   sumTxt: { textAlign: 'right', color: COLORS.primary, fontWeight: '700' },
   sumTotal: { textAlign: 'right', fontWeight: '800', fontSize: 16, marginTop: 6, color: COLORS.dark },
+  results: { backgroundColor: COLORS.card, borderRadius: 16, marginBottom: 12, maxHeight: 260, overflow: 'hidden', borderWidth: 1, borderColor: COLORS.line },
+  res: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, paddingHorizontal: 14, borderBottomWidth: 1, borderBottomColor: COLORS.line },
+  resTxt: { color: COLORS.dark, fontWeight: '700' },
+  resGov: { color: COLORS.muted },
+  none: { color: COLORS.muted, textAlign: 'right', padding: 14 },
   err: { color: COLORS.danger, textAlign: 'right', marginTop: 10 },
 }));
