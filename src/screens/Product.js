@@ -60,7 +60,7 @@ export default function Product({ route, navigation }) {
           ) : null}
 
           <Text style={s.cod}>💵 الدفع عند الاستلام • 🚚 توصيل مجاني</Text>
-          <Text style={s.swap}>🔄 استبدال بنفس المنتج فقط عند وجود عيب، خلال يومين من الاستلام (لا يوجد إرجاع، ولا استبدال في اليوم الثالث)</Text>
+          <Text style={s.swap}>ℹ️ لا توجد خدمة استبدال أو استرجاع</Text>
           {isOwner ? <Btn kind="ghost" title="تعديل المنتج" style={{ marginTop: 12 }} onPress={() => navigation.navigate('ProductEditor', { id: p.id })} /> : null}
         </View>
       </ScrollView>
