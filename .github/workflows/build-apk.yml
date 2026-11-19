@@ -16,7 +16,8 @@ jobs:
         with: { distribution: temurin, java-version: 17 }
       - run: npm install
       - name: Stamp build number
-        run: echo '{ "build": ${{ github.run_number }} }' > src/build.json
+        run: |
+          printf '{"build": %s}' "${{ github.run_number }}" > src/build.json
       - run: npx expo prebuild --platform android --no-install
       - run: cd android && chmod +x gradlew && ./gradlew assembleRelease --no-daemon
       - uses: actions/upload-artifact@v4
