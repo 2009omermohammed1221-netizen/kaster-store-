@@ -3,15 +3,15 @@ import { StyleSheet, Text, useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LIGHT = {
-  primary: '#1F3A6E', onPrimary: '#FFFFFF', dark: '#14213D', bg: '#F5F7FB', card: '#FFFFFF',
-  muted: '#6B7690', line: '#E8ECF4', tint: '#EAF0FB',
+  primary: '#1F3A6E', onPrimary: '#FFFFFF', dark: '#0B1630', bg: '#F5F7FB', card: '#FFFFFF',
+  muted: '#56627F', line: '#DFE4EF', tint: '#EAF0FB',
   danger: '#E5484D', dangerBg: '#FDE4E5', dangerInk: '#C0262B',
   ok: '#1E8E5A', okBg: '#DFF5EA', amber: '#B7791F', amberBg: '#FFF4D6',
   blue: '#1D6FB8', blueBg: '#E1F0FF', accent: '#E98B2A',
 };
 const DARK = {
   primary: '#7FA6F0', onPrimary: '#0E1730', dark: '#EEF2FB', bg: '#0E1424', card: '#172036',
-  muted: '#9AA6C2', line: '#26314D', tint: '#1E2A48',
+  muted: '#B3BEDA', line: '#26314D', tint: '#1E2A48',
   danger: '#FF6A6E', dangerBg: '#3A1D22', dangerInk: '#FF8A8E',
   ok: '#4CC38A', okBg: '#16322A', amber: '#F2B85B', amberBg: '#3A2D12',
   blue: '#6DB4F5', blueBg: '#132B42', accent: '#F0A24A',
@@ -24,7 +24,7 @@ try {
     Text.__themed = true;
     Text.render = function (...args) {
       const el = origRender.apply(this, args);
-      return React.cloneElement(el, { style: [{ color: COLORS.dark }, el.props.style] });
+      return React.cloneElement(el, { style: [{ color: COLORS.dark, fontSize: 15 }, el.props.style] });
     };
   }
 } catch (e) {}

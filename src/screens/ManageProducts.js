@@ -68,8 +68,8 @@ const s = themed(() => ({
   row: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.card, borderRadius: 20, shadowColor: '#14213D', shadowOpacity: 0.07, shadowRadius: 10, shadowOffset: { width: 0, height: 3 }, elevation: 2, padding: 10, marginBottom: 10 },
   thumb: { width: 56, height: 56, borderRadius: 10, backgroundColor: COLORS.tint, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   name: { textAlign: 'right', fontWeight: '700', color: COLORS.dark },
-  sub: { textAlign: 'right', color: COLORS.muted, marginTop: 3, fontSize: 12.5 },
+  sub: { textAlign: 'right', color: COLORS.muted, marginTop: 3, fontSize: 13.5 },
   delBtn: { marginStart: 8, paddingVertical: 8, paddingHorizontal: 10, borderRadius: 10, borderWidth: 1, borderColor: COLORS.danger, backgroundColor: 'rgba(220,38,38,0.08)' },
-  delTxt: { color: COLORS.danger, fontWeight: '700', fontSize: 13 },
+  delTxt: { color: COLORS.danger, fontWeight: '700', fontSize: 14 },
   bar: { padding: 12, backgroundColor: COLORS.card, borderBottomWidth: 1, borderBottomColor: COLORS.line },
 }));

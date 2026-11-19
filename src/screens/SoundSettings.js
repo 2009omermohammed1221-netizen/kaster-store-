@@ -137,5 +137,5 @@ const s = themed(() => ({
   list: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 12 },
   item: { backgroundColor: COLORS.bg, borderRadius: 18, paddingHorizontal: 14, paddingVertical: 8, borderWidth: 1, borderColor: COLORS.line },
   itemOn: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
-  itemTxt: { color: COLORS.dark, fontSize: 13 },
+  itemTxt: { color: COLORS.dark, fontSize: 14 },
 }));

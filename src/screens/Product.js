@@ -76,7 +76,7 @@ export default function Product({ route, navigation }) {
 const s = themed(() => ({
   root: { flex: 1, backgroundColor: COLORS.bg },
   big: { height: 260, backgroundColor: COLORS.tint, alignItems: 'center', justifyContent: 'center' },
-  pager: { position: 'absolute', bottom: 10, left: 12, backgroundColor: '#0009', color: '#fff', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 10, overflow: 'hidden', fontSize: 12 },
+  pager: { position: 'absolute', bottom: 10, left: 12, backgroundColor: '#0009', color: '#fff', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 10, overflow: 'hidden', fontSize: 13 },
   body: { padding: 18 },
   cat: { color: COLORS.muted, textAlign: 'right' },
   name: { fontSize: 22, fontWeight: '800', color: COLORS.dark, textAlign: 'right', marginTop: 4 },

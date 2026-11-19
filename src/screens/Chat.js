@@ -124,7 +124,7 @@ const s = themed(() => ({
   mine: { alignSelf: 'flex-start', backgroundColor: COLORS.primary },
   theirs: { alignSelf: 'flex-end', backgroundColor: COLORS.card, borderWidth: 1, borderColor: COLORS.line },
   txt: { color: COLORS.dark, textAlign: 'right', lineHeight: 22 },
-  time: { fontSize: 10.5, color: COLORS.muted, marginTop: 4, textAlign: 'left' },
+  time: { fontSize: 11.5, color: COLORS.muted, marginTop: 4, textAlign: 'left' },
   imgBox: { width: 200, height: 200, borderRadius: 12, marginBottom: 6, backgroundColor: COLORS.tint, alignItems: 'center', justifyContent: 'center' },
   inputBar: { flexDirection: 'row', alignItems: 'flex-end', gap: 8, padding: 10, backgroundColor: COLORS.card, borderTopWidth: 1, borderTopColor: COLORS.line },
   input: { flex: 1, maxHeight: 110, backgroundColor: COLORS.bg, borderRadius: 18, paddingHorizontal: 14, paddingVertical: 9, fontSize: 15, color: COLORS.dark },

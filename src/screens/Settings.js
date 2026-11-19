@@ -172,5 +172,5 @@ const s = themed(() => ({
   msg: { color: COLORS.ok, textAlign: 'right', marginTop: 8 },
   hint: { color: COLORS.muted, textAlign: 'right', marginBottom: 10 },
   modes: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  foot: { textAlign: 'center', color: COLORS.muted, marginTop: 24, fontSize: 12 },
+  foot: { textAlign: 'center', color: COLORS.muted, marginTop: 24, fontSize: 13 },
 }));

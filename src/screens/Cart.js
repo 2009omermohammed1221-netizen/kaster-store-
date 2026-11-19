@@ -76,5 +76,5 @@ const s = themed(() => ({
   line: { flexDirection: 'row', justifyContent: 'space-between', marginVertical: 3 },
   v: { fontWeight: '700', color: COLORS.dark },
   lbl: { color: COLORS.dark },
-  hint: { color: COLORS.muted, textAlign: 'right', fontSize: 12.5, marginTop: 6 },
+  hint: { color: COLORS.muted, textAlign: 'right', fontSize: 13.5, marginTop: 6 },
 }));

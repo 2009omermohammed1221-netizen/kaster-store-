@@ -98,6 +98,6 @@ const s = themed(() => ({
   row: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: COLORS.line, backgroundColor: COLORS.card },
   name: { fontWeight: '800', color: COLORS.dark, textAlign: 'right', fontSize: 15 },
   last: { color: COLORS.muted, textAlign: 'right', marginTop: 3 },
-  time: { color: COLORS.muted, fontSize: 11.5 },
-  badge: { backgroundColor: COLORS.primary, color: COLORS.onPrimary, minWidth: 22, textAlign: 'center', borderRadius: 11, overflow: 'hidden', fontSize: 12, fontWeight: '800', paddingHorizontal: 5, paddingVertical: 1 },
+  time: { color: COLORS.muted, fontSize: 12.5 },
+  badge: { backgroundColor: COLORS.primary, color: COLORS.onPrimary, minWidth: 22, textAlign: 'center', borderRadius: 11, overflow: 'hidden', fontSize: 13, fontWeight: '800', paddingHorizontal: 5, paddingVertical: 1 },
 }));

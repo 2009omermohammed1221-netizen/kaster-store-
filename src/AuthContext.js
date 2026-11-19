@@ -15,6 +15,8 @@ export function normalizePhone(raw) {
   return d;
 }
 export const validPhone = (raw) => /^\d{10,15}$/.test(normalizePhone(raw));
+// رقم هاتف عراقي من 11 رقماً بالضبط (07xxxxxxxxx)
+export const validPhone11 = (raw) => /^07\d{9}$/.test(String(raw || '').replace(/[\s-]/g, ''));
 const validEmail = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(e).trim());
 const toEmail = (id) => {
   const v = String(id).trim();
@@ -82,7 +84,7 @@ export function AuthProvider({ children }) {
       return signUp(email.trim().toLowerCase(), password);
     },
     signUpPhone: (phone, password) => {
-      if (!validPhone(phone)) return Promise.resolve('رقم الهاتف غير صحيح.');
+      if (!validPhone11(phone)) return Promise.resolve('رقم الهاتف يجب أن يكون 11 رقماً ويبدأ بـ 07.');
       return signUp(toEmail(phone), password);
     },
     signIn: (id, password) => {

@@ -38,5 +38,5 @@ const s = themed(() => ({
   icon: { fontSize: 26 },
   title: { fontWeight: '800', color: COLORS.dark, textAlign: 'right' },
   body: { color: COLORS.dark, textAlign: 'right', marginTop: 3, lineHeight: 21 },
-  time: { color: COLORS.muted, fontSize: 11.5, textAlign: 'right', marginTop: 6 },
+  time: { color: COLORS.muted, fontSize: 12.5, textAlign: 'right', marginTop: 6 },
 }));

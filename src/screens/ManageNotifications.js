@@ -70,7 +70,7 @@ const s = themed(() => ({
   card: { backgroundColor: COLORS.card, borderRadius: 20, shadowColor: '#14213D', shadowOpacity: 0.07, shadowRadius: 10, shadowOffset: { width: 0, height: 3 }, elevation: 2, padding: 14, marginBottom: 10 },
   title: { fontWeight: '800', color: COLORS.dark, textAlign: 'right' },
   body: { color: COLORS.dark, textAlign: 'right', marginTop: 4, lineHeight: 21 },
-  meta: { color: COLORS.muted, fontSize: 12, textAlign: 'right', marginTop: 6 },
+  meta: { color: COLORS.muted, fontSize: 13, textAlign: 'right', marginTop: 6 },
   h: { fontSize: 20, fontWeight: '800', textAlign: 'right', color: COLORS.dark, marginBottom: 14 },
   label: { textAlign: 'right', color: COLORS.dark, fontWeight: '600', marginTop: 4 },
 }));

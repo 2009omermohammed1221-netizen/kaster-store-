@@ -77,7 +77,7 @@ const s = themed(() => ({
   label: { textAlign: 'right', color: COLORS.dark, fontWeight: '600', marginBottom: 6 },
   input: { backgroundColor: COLORS.card, borderRadius: 16, borderWidth: 1, borderColor: COLORS.line, padding: 14, fontSize: 15, color: COLORS.dark },
   chip: { backgroundColor: COLORS.card, borderRadius: 20, borderWidth: 1, borderColor: COLORS.line, paddingHorizontal: 15, paddingVertical: 8 },
-  chipTxt: { color: COLORS.dark, fontSize: 13 },
+  chipTxt: { color: COLORS.dark, fontSize: 14 },
   empty: { alignItems: 'center', justifyContent: 'center', padding: 40 },
   emptyTxt: { color: COLORS.muted, marginTop: 10, textAlign: 'center' },
 }));

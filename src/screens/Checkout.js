@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { themed, useTheme } from '../theme';
 import { COLORS } from '../config';
-import { useAuth, validPhone } from '../AuthContext';
+import { useAuth, validPhone11 } from '../AuthContext';
 import { Btn, Field } from '../ui';
 
 // الخطوة 1: الاسم ورقم الهاتف وملاحظات للمندوب
@@ -17,8 +17,8 @@ export default function Checkout({ navigation }) {
 
   const next = () => {
     if (!name.trim()) return setErr('اكتب اسمك.');
-    if (!validPhone(phone)) return setErr('أدخل رقم هاتف صحيح.');
-    if (phone2.trim() && !validPhone(phone2)) return setErr('رقم الهاتف الثاني غير صحيح (أو اتركه فارغاً).');
+    if (!validPhone11(phone)) return setErr('رقم الهاتف يجب أن يكون 11 رقماً ويبدأ بـ 07.');
+    if (phone2.trim() && !validPhone11(phone2)) return setErr('رقم الهاتف الثاني يجب أن يكون 11 رقماً (أو اتركه فارغاً).');
     setErr('');
     navigation.navigate('CheckoutAddress', { info: { name: name.trim(), phone: phone.trim(), phone2: phone2.trim(), notes: notes.trim() } });
   };
@@ -29,8 +29,8 @@ export default function Checkout({ navigation }) {
         <Text style={s.step}>الخطوة 1 من 2</Text>
         <Text style={s.h}>بيانات المستلم</Text>
         <Field label="الاسم *" value={name} onChangeText={setName} placeholder="مثال: محمد أو محمد أحمد أو محمد أحمد علي" />
-        <Field label="رقم الهاتف *" value={phone} onChangeText={setPhone} keyboardType="phone-pad" placeholder="07xxxxxxxxx" />
-        <Field label="رقم هاتف آخر (اختياري)" value={phone2} onChangeText={setPhone2} keyboardType="phone-pad" placeholder="07xxxxxxxxx" />
+        <Field label="رقم الهاتف *" value={phone} onChangeText={setPhone} keyboardType="phone-pad" maxLength={11} placeholder="07xxxxxxxxx" />
+        <Field label="رقم هاتف آخر (اختياري)" value={phone2} onChangeText={setPhone2} keyboardType="phone-pad" maxLength={11} placeholder="07xxxxxxxxx" />
         <Field label="ملاحظات للمندوب (اختياري)" value={notes} onChangeText={setNotes} multiline placeholder="مثال: الاتصال قبل الوصول" />
         {err ? <Text style={s.err}>{err}</Text> : null}
         <Btn title="إكمال" onPress={next} style={{ marginTop: 8 }} />

@@ -63,7 +63,7 @@ function Tabs() {
         headerShown: false,
         tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: COLORS.muted,
-        tabBarLabelStyle: { fontSize: 11, fontWeight: '700' },
+        tabBarLabelStyle: { fontSize: 12, fontWeight: '700' },
         tabBarStyle: { height: 66, paddingBottom: 8, paddingTop: 6, backgroundColor: COLORS.card, borderTopWidth: 0, elevation: 16, shadowColor: '#14213D', shadowOpacity: 0.12, shadowRadius: 16, shadowOffset: { width: 0, height: -4 }, borderTopLeftRadius: 24, borderTopRightRadius: 24 },
       }}
     >

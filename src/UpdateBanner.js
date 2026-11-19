@@ -44,7 +44,7 @@ export default function UpdateBanner() {
 const s = StyleSheet.create({
   box: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: '#1F3A6E', marginHorizontal: 12, marginTop: 8, padding: 12, borderRadius: 14 },
   title: { color: '#fff', fontWeight: '800', textAlign: 'right', fontSize: 14 },
-  note: { color: 'rgba(255,255,255,0.85)', textAlign: 'right', fontSize: 12, marginTop: 3 },
+  note: { color: 'rgba(255,255,255,0.85)', textAlign: 'right', fontSize: 13, marginTop: 3 },
   btn: { backgroundColor: '#E98B2A', paddingVertical: 9, paddingHorizontal: 12, borderRadius: 10 },
-  btnTxt: { color: '#fff', fontWeight: '800', fontSize: 13 },
+  btnTxt: { color: '#fff', fontWeight: '800', fontSize: 14 },
 });
