@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, Image, Switch, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { themed, useTheme } from '../theme';
 import * as ImagePicker from 'expo-image-picker';
+import * as ImageManipulator from 'expo-image-manipulator';
 import { COLORS } from '../config';
 import { CATEGORIES } from '../data';
 import { supabase } from '../supabase';
@@ -33,7 +34,8 @@ export default function ProductEditor({ route, navigation }) {
     const res = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsMultipleSelection: true,
-      quality: 0.8,
+      orderedSelection: true,
+      quality: 1,
     });
     if (res.canceled) return;
     setErr('');
@@ -41,10 +43,19 @@ export default function ProductEditor({ route, navigation }) {
       setUploading((n) => n + 1);
       try {
         const isVideo = a.type === 'video';
-        const ext = (a.uri.split('.').pop() || (isVideo ? 'mp4' : 'jpg')).split('?')[0].toLowerCase();
+        let uri = a.uri;
+        let mime = a.mimeType || (isVideo ? 'video/mp4' : 'image/jpeg');
+        let ext = (a.uri.split('.').pop() || (isVideo ? 'mp4' : 'jpg')).split('?')[0].toLowerCase();
+        if (!isVideo) {
+          // تحسين تلقائي: دقة عالية موحّدة (حتى 1600 بكسل) وضغط خفيف للحفاظ على الجودة
+          try {
+            const r = await ImageManipulator.manipulateAsync(a.uri, a.width > 1600 ? [{ resize: { width: 1600 } }] : [], { compress: 0.92, format: ImageManipulator.SaveFormat.JPEG });
+            uri = r.uri; mime = 'image/jpeg'; ext = 'jpg';
+          } catch (e) {}
+        }
         const path = `${folder}/${rid()}.${ext}`;
-        const buf = await (await fetch(a.uri)).arrayBuffer();
-        const up = await supabase.storage.from('product-media').upload(path, buf, { contentType: a.mimeType || (isVideo ? 'video/mp4' : 'image/jpeg') });
+        const buf = await (await fetch(uri)).arrayBuffer();
+        const up = await supabase.storage.from('product-media').upload(path, buf, { contentType: mime });
         if (up.error) throw up.error;
         const { data } = supabase.storage.from('product-media').getPublicUrl(path);
         setMedia((cur) => [...cur, { type: isVideo ? 'video' : 'image', url: data.publicUrl }]);
@@ -54,6 +65,8 @@ export default function ProductEditor({ route, navigation }) {
       setUploading((n) => n - 1);
     }
   };
+
+  const move = (i, d) => setMedia((c) => { const j = i + d; if (j < 0 || j >= c.length) return c; const n = [...c]; [n[i], n[j]] = [n[j], n[i]]; return n; });
 
   const save = async () => {
     setErr('');
@@ -113,6 +126,11 @@ export default function ProductEditor({ route, navigation }) {
             <View key={i} style={s.thumb}>
               {m.type === 'image' ? <Image source={{ uri: m.url }} style={{ width: 90, height: 90 }} /> : <Text style={{ fontSize: 30 }}>🎬</Text>}
               <TouchableOpacity style={s.x} onPress={() => setMedia((c) => c.filter((_, j) => j !== i))}><Text style={{ color: '#fff', fontWeight: '800' }}>✕</Text></TouchableOpacity>
+              <Text style={s.num}>{i + 1}</Text>
+              <View style={s.mv}>
+                <TouchableOpacity style={s.mvBtn} disabled={i === 0} onPress={() => move(i, -1)}><Text style={[s.mvTxt, i === 0 && { opacity: 0.3 }]}>▶</Text></TouchableOpacity>
+                <TouchableOpacity style={s.mvBtn} disabled={i === media.length - 1} onPress={() => move(i, 1)}><Text style={[s.mvTxt, i === media.length - 1 && { opacity: 0.3 }]}>◀</Text></TouchableOpacity>
+              </View>
             </View>
           ))}
         </ScrollView>
@@ -141,6 +159,10 @@ const s = themed(() => ({
   add: { width: 90, height: 90, borderRadius: 12, borderWidth: 1.5, borderStyle: 'dashed', borderColor: COLORS.primary, alignItems: 'center', justifyContent: 'center' },
   addTxt: { color: COLORS.primary, fontSize: 13 },
   thumb: { width: 90, height: 90, borderRadius: 12, backgroundColor: COLORS.tint, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  num: { position: 'absolute', top: 4, left: 4, backgroundColor: COLORS.primary, color: '#fff', fontSize: 12, fontWeight: '800', minWidth: 20, textAlign: 'center', borderRadius: 10, overflow: 'hidden', paddingVertical: 1 },
+  mv: { position: 'absolute', bottom: 0, left: 0, right: 0, flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#000a' },
+  mvBtn: { flex: 1, alignItems: 'center', paddingVertical: 5 },
+  mvTxt: { color: '#fff', fontSize: 13 },
   x: { position: 'absolute', top: 4, right: 4, backgroundColor: '#000a', width: 22, height: 22, borderRadius: 11, alignItems: 'center', justifyContent: 'center' },
   linkBox: { backgroundColor: COLORS.card, borderRadius: 20, shadowColor: '#14213D', shadowOpacity: 0.07, shadowRadius: 10, shadowOffset: { width: 0, height: 3 }, elevation: 2, padding: 10, marginBottom: 10 },
   err: { color: COLORS.danger, textAlign: 'right', marginTop: 10 },
