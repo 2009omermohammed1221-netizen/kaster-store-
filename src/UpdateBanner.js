@@ -31,7 +31,6 @@ export default function UpdateBanner() {
     <View style={s.box}>
       <View style={{ flex: 1 }}>
         <Text style={s.title}>🎉 يتوفر تحديث جديد للتطبيق</Text>
-        {info.notes.map((n, i) => <Text key={i} style={s.note}>• {n.replace(/^[-•*]\s*/, '')}</Text>)}
       </View>
       <TouchableOpacity style={s.btn} onPress={() => Linking.openURL(STORE.shareUrl)}>
         <Text style={s.btnTxt}>تحديث التطبيق</Text>
