@@ -32,10 +32,10 @@ export default function Product({ route, navigation }) {
             <ScrollView horizontal pagingEnabled style={{ direction: 'ltr' }} showsHorizontalScrollIndicator={false} onMomentumScrollEnd={(e) => setPage(Math.round(e.nativeEvent.contentOffset.x / width))}>
               {media.map((m, i) =>
                 m.type === 'video' ? (
-                  <Video key={i} source={{ uri: m.url }} style={{ width, height: 300, backgroundColor: '#000' }} useNativeControls resizeMode={ResizeMode.CONTAIN} />
+                  <Video key={i} source={{ uri: m.url }} style={{ width, height: width, backgroundColor: '#000' }} useNativeControls resizeMode={ResizeMode.CONTAIN} />
                 ) : (
                   <TouchableOpacity key={i} activeOpacity={0.95} onPress={() => setViewIdx(Math.max(0, imgs.indexOf(m.url)))}>
-                    <Image source={{ uri: m.url }} style={{ width, height: 300, backgroundColor: COLORS.tint }} resizeMode="cover" />
+                    <Image source={{ uri: m.url }} style={{ width, height: width, backgroundColor: '#fff' }} resizeMode="contain" />
                   </TouchableOpacity>
                 )
               )}

@@ -71,11 +71,6 @@ export default function ImageViewer({ images, index, onClose, onIndex }) {
             <TouchableOpacity style={[s.nav, { right: 10 }]} onPress={() => onIndex((index + 1) % n)}><Text style={s.btnTxt}>›</Text></TouchableOpacity>
           </>
         ) : null}
-        <View style={s.bottom}>
-          <TouchableOpacity style={s.zoom} onPress={() => zoomBy(1 / 1.5)}><Text style={s.zoomTxt}>−</Text></TouchableOpacity>
-          <TouchableOpacity style={s.zoomSm} onPress={reset}><Text style={s.zoomSmTxt}>{Math.round(v.s * 100)}%</Text></TouchableOpacity>
-          <TouchableOpacity style={s.zoom} onPress={() => zoomBy(1.5)}><Text style={s.zoomTxt}>+</Text></TouchableOpacity>
-        </View>
       </View>
     </Modal>
   );
