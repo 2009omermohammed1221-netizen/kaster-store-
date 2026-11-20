@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Linking, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { STORE } from './config';
 import { build as localBuild } from './build.json';
 
@@ -7,25 +8,28 @@ const API = 'https://api.github.com/repos/kasterstore/kaster-store-/releases/tag
 
 // يظهر زر «تحديث التطبيق» عند وجود نسخة أحدث، ويفتح تنزيل الـ APK مباشرة
 export default function UpdateBanner() {
-  const [info, setInfo] = useState(null);
-  const [hide, setHide] = useState(false);
+  // أعلى رقم نسخة معروف على الخادم (يُحفظ حتى لا يختفي الشريط عند فشل الاتصال)
+  const [remote, setRemote] = useState(0);
 
   useEffect(() => {
     let off = false;
+    AsyncStorage.getItem('remote_build').then((v) => { if (!off && v) setRemote(parseInt(v, 10) || 0); }).catch(() => {});
     fetch(API, { headers: { Accept: 'application/vnd.github+json' } })
       .then((r) => r.json())
       .then((rel) => {
         const m = /build\s*(\d+)/i.exec(rel?.body || '');
-        const remote = m ? parseInt(m[1], 10) : 0;
-        if (!off && remote > localBuild) {
-          const notes = String(rel.body).split('\n').slice(1).map((x) => x.trim()).filter(Boolean).slice(0, 4);
-          setInfo({ notes });
+        const n = m ? parseInt(m[1], 10) : 0;
+        if (n > 0) {
+          AsyncStorage.setItem('remote_build', String(n)).catch(() => {});
+          if (!off) setRemote(n);
         }
       })
       .catch(() => {});
     return () => { off = true; };
   }, []);
 
+  const info = remote > localBuild;
+  const hide = false;
   if (!info || hide) return null;
   return (
     <View style={s.box}>
@@ -35,7 +39,6 @@ export default function UpdateBanner() {
       <TouchableOpacity style={s.btn} onPress={() => Linking.openURL(STORE.shareUrl)}>
         <Text style={s.btnTxt}>تحديث التطبيق</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => setHide(true)} style={{ padding: 6 }}><Text style={{ color: '#fff', fontSize: 16 }}>✕</Text></TouchableOpacity>
     </View>
   );
 }

@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from './supabase';
 import { configured } from './config';
 import { PRODUCTS as SAMPLE } from './data';
@@ -32,11 +33,16 @@ export function ProductsProvider({ children }) {
   const load = useCallback(async () => {
     if (!configured()) return;
     const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
-    if (!error && data) setAll(data.map(fromRow));
+    if (!error && data) {
+      setAll(data.map(fromRow));
+      AsyncStorage.setItem('products_cache', JSON.stringify(data)).catch(() => {});
+    }
     setLoading(false);
   }, []);
 
   useEffect(() => {
+    // نعرض آخر منتجات محفوظة فوراً (حتى مع بطء الشبكة أو بعد التحديث) ثم نحدّثها من الخادم
+    AsyncStorage.getItem('products_cache').then((c) => { if (c) { try { setAll((cur) => (cur.length ? cur : JSON.parse(c).map(fromRow))); setLoading(false); } catch (e) {} } }).catch(() => {});
     load();
     if (!configured()) return;
     const ch = supabase.channel('products-rt')
