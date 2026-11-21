@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity, Linking, useWindowDimensions, StyleSheet } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, Text, ScrollView, Image, TouchableOpacity, Linking, PanResponder, useWindowDimensions, StyleSheet } from 'react-native';
 import { themed, useTheme } from '../theme';
 import { Video, ResizeMode } from 'expo-av';
 import { COLORS, fmt } from '../config';
@@ -19,6 +19,18 @@ export default function Product({ route, navigation }) {
   const [page, setPage] = useState(0);
   const [viewIdx, setViewIdx] = useState(null);
   const p = all.find((x) => x.id === route.params.id);
+  const cnt = useRef(0);
+  cnt.current = p?.media?.length || 0;
+  // تقليب الصور يدوياً بالترتيب الصحيح (1 ثم 2 ثم 3...) بدون اعتماد على اتجاه التمرير في الجهاز
+  const swipe = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dx) > 12 && Math.abs(g.dx) > Math.abs(g.dy) * 1.5,
+      onPanResponderRelease: (_, g) => {
+        if (g.dx < -40) setPage((x) => Math.min(x + 1, cnt.current - 1));
+        else if (g.dx > 40) setPage((x) => Math.max(x - 1, 0));
+      },
+    })
+  ).current;
   if (!p) return null;
   const cat = CATEGORIES.find((c) => c.id === p.cat);
   const media = p.media || [];
@@ -29,19 +41,26 @@ export default function Product({ route, navigation }) {
       <ScrollView>
         {media.length ? (
           <View>
-            <ScrollView horizontal pagingEnabled style={{ direction: 'ltr' }} showsHorizontalScrollIndicator={false} onMomentumScrollEnd={(e) => setPage(Math.round(e.nativeEvent.contentOffset.x / width))}>
-              {media.map((m, i) =>
-                m.type === 'video' ? (
-                  <Video key={i} source={{ uri: m.url }} style={{ width, height: width, backgroundColor: '#000' }} useNativeControls resizeMode={ResizeMode.CONTAIN} />
+            <View {...swipe.panHandlers}>
+              {(() => {
+                const m = media[Math.min(page, media.length - 1)];
+                return m.type === 'video' ? (
+                  <Video key={page} source={{ uri: m.url }} style={{ width, height: width, backgroundColor: '#000' }} useNativeControls resizeMode={ResizeMode.CONTAIN} />
                 ) : (
-                  <TouchableOpacity key={i} activeOpacity={0.95} onPress={() => setViewIdx(Math.max(0, imgs.indexOf(m.url)))}>
+                  <TouchableOpacity activeOpacity={0.95} onPress={() => setViewIdx(Math.max(0, imgs.indexOf(m.url)))}>
                     <Image source={{ uri: m.url }} style={{ width, height: width, backgroundColor: '#fff' }} resizeMode="contain" />
                   </TouchableOpacity>
-                )
-              )}
-            </ScrollView>
+                );
+              })()}
+            </View>
+            {media.length > 1 ? (
+              <>
+                <TouchableOpacity style={[s.arrow, { left: 8 }]} disabled={page === 0} onPress={() => setPage((x) => Math.max(0, x - 1))}><Text style={[s.arrowTxt, page === 0 && { opacity: 0.3 }]}>‹</Text></TouchableOpacity>
+                <TouchableOpacity style={[s.arrow, { right: 8 }]} disabled={page >= media.length - 1} onPress={() => setPage((x) => Math.min(media.length - 1, x + 1))}><Text style={[s.arrowTxt, page >= media.length - 1 && { opacity: 0.3 }]}>›</Text></TouchableOpacity>
+              </>
+            ) : null}
             {imgs.length ? (
-              <TouchableOpacity style={s.zoomBtn} onPress={() => setViewIdx(0)}><Text style={s.zoomTxt}>🔍 عرض الصورة</Text></TouchableOpacity>
+              <TouchableOpacity style={s.zoomBtn} onPress={() => { const cur = media[Math.min(page, media.length - 1)]; setViewIdx(Math.max(0, imgs.indexOf(cur?.url))); }}><Text style={s.zoomTxt}>🔍 عرض الصورة</Text></TouchableOpacity>
             ) : null}
             {media.length > 1 && <Text style={s.pager}>{page + 1} / {media.length}</Text>}
           </View>
@@ -96,6 +115,8 @@ const s = themed(() => ({
   link: { backgroundColor: COLORS.card, borderRadius: 10, borderWidth: 1, borderColor: COLORS.line, padding: 12, marginTop: 8 },
   linkTxt: { color: COLORS.primary, textAlign: 'right', fontWeight: '600' },
   cod: { marginTop: 18, color: COLORS.primary, textAlign: 'right', fontWeight: '600' },
+  arrow: { position: 'absolute', top: '45%', width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(0,0,0,0.45)', alignItems: 'center', justifyContent: 'center' },
+  arrowTxt: { color: '#fff', fontSize: 26, fontWeight: '700', lineHeight: 30 },
   zoomBtn: { position: 'absolute', bottom: 12, right: 12, backgroundColor: 'rgba(0,0,0,0.6)', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 18 },
   zoomTxt: { color: '#fff', fontWeight: '700', fontSize: 13 },
   swap: { marginTop: 8, color: COLORS.muted, textAlign: 'right', lineHeight: 22 },
